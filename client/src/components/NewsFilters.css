@@ -1,0 +1,142 @@
+.news-filters {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filters-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin: 0;
+}
+
+.expand-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--gray-color);
+  transition: all 0.3s ease;
+}
+
+.expand-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.filters-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.filters-content.expanded {
+  max-height: 200px;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: var(--dark-color);
+  font-size: 14px;
+}
+
+.filter-group select {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+.filter-group select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.active-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgba(26, 115, 232, 0.1);
+  color: var(--primary-color);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.active-filter button {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.active-filter button:hover {
+  background-color: rgba(26, 115, 232, 0.2);
+}
+
+@media (max-width: 768px) {
+  .news-filters {
+    padding: 15px;
+  }
+  
+  .filters-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .filters-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .filters-content.expanded {
+    max-height: 400px;
+  }
+}
