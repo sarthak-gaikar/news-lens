@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { authService } from '../services/auth'; // ← Fix import path
+import { authService } from '../services/auth';
 import './Profile.css';
 
 const Profile = () => {
@@ -11,7 +11,7 @@ const Profile = () => {
   const [userStats, setUserStats] = useState(null);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.preferences) {
       setPreferences(user.preferences);
       loadUserStats();
     }
@@ -19,17 +19,11 @@ const Profile = () => {
 
   const loadUserStats = async () => {
     try {
-      // This would typically come from a user stats endpoint
+      // This is mock data and would typically come from a user stats endpoint
       const stats = {
         totalRead: 42,
         totalLiked: 15,
         totalSaved: 8,
-        preferredCategories: {
-          technology: 12,
-          politics: 8,
-          business: 6,
-          entertainment: 4
-        }
       };
       setUserStats(stats);
     } catch (error) {
@@ -48,7 +42,7 @@ const Profile = () => {
     setPreferences(prev => ({
       ...prev,
       biasFilter: {
-        ...prev.biasFilter,
+        ...(prev.biasFilter || {}),
         [bias]: enabled
       }
     }));
@@ -60,11 +54,16 @@ const Profile = () => {
       setMessage('');
       await authService.updatePreferences(preferences);
       setMessage('Preferences updated successfully!');
+
+      // Refresh the page to load the new preferences
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // Wait 1 second to allow the user to read the message
+
     } catch (error) {
       setMessage('Error updating preferences. Please try again.');
       console.error('Error saving preferences:', error);
-    } finally {
-      setLoading(false);
+      setLoading(false); // Stop loading if there's an error
     }
   };
 
@@ -100,7 +99,6 @@ const Profile = () => {
         </div>
 
         <div className="profile-content">
-          {/* User Stats */}
           {userStats && (
             <div className="stats-section">
               <h2>Your News Activity</h2>
@@ -121,7 +119,6 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Preferences */}
           <div className="preferences-section">
             <h2>News Preferences</h2>
             
@@ -132,7 +129,7 @@ const Profile = () => {
                   <label key={topic} className="topic-checkbox">
                     <input
                       type="checkbox"
-                      checked={preferences.topics?.includes(topic)}
+                      checked={(preferences.topics || []).includes(topic)}
                       onChange={(e) => {
                         const newTopics = e.target.checked
                           ? [...(preferences.topics || []), topic]
@@ -156,7 +153,7 @@ const Profile = () => {
                 <label className="bias-preference">
                   <input
                     type="checkbox"
-                    checked={preferences.biasFilter?.left !== false}
+                    checked={preferences.biasFilter?.left ?? true}
                     onChange={(e) => handleBiasFilterChange('left', e.target.checked)}
                   />
                   <span className="bias-indicator bias-left"></span>
@@ -165,7 +162,7 @@ const Profile = () => {
                 <label className="bias-preference">
                   <input
                     type="checkbox"
-                    checked={preferences.biasFilter?.center !== false}
+                    checked={preferences.biasFilter?.center ?? true}
                     onChange={(e) => handleBiasFilterChange('center', e.target.checked)}
                   />
                   <span className="bias-indicator bias-center"></span>
@@ -174,7 +171,7 @@ const Profile = () => {
                 <label className="bias-preference">
                   <input
                     type="checkbox"
-                    checked={preferences.biasFilter?.right !== false}
+                    checked={preferences.biasFilter?.right ?? true}
                     onChange={(e) => handleBiasFilterChange('right', e.target.checked)}
                   />
                   <span className="bias-indicator bias-right"></span>
@@ -183,7 +180,7 @@ const Profile = () => {
                 <label className="bias-preference">
                   <input
                     type="checkbox"
-                    checked={preferences.biasFilter?.neutral !== false}
+                    checked={preferences.biasFilter?.neutral ?? true}
                     onChange={(e) => handleBiasFilterChange('neutral', e.target.checked)}
                   />
                   <span className="bias-indicator bias-neutral"></span>
