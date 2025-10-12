@@ -6,6 +6,7 @@
   transition: all 0.3s ease;
   cursor: pointer;
   border: 1px solid var(--border-color);
+  box-sizing: border-box; /* Ensures padding doesn't cause overflow */
 }
 
 .article-card:hover {
@@ -65,7 +66,6 @@
   font-size: 14px;
   color: var(--gray-color);
   line-height: 1.5;
-  margin-bottom: 15px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -77,7 +77,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-top: 15px;
 }
 
 .article-category {
@@ -89,45 +89,36 @@
   text-transform: capitalize;
 }
 
-.bias-bar-container {
-  margin-top: 10px;
-}
-
-.bias-bar {
-  position: relative;
-  height: 6px;
-  background: linear-gradient(
-    90deg,
-    var(--left-bias) 0%,
-    var(--center-bias) 50%,
-    var(--right-bias) 100%
-  );
-  border-radius: 3px;
-  margin-bottom: 8px;
-}
-
-.bias-marker {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.bias-marker.bias-left { background-color: var(--left-bias); }
-.bias-marker.bias-center { background-color: var(--center-bias); }
-.bias-marker.bias-right { background-color: var(--right-bias); }
-.bias-marker.bias-neutral { background-color: var(--neutral-bias); }
-
-.bias-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: var(--gray-color);
+/* --- Styles for the colored bias label --- */
+.bias-label {
+  font-size: 12px;
   font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+/* Color scheme for Left Leaning */
+.bias-label.bias-left {
+  background-color: #e7f3ff; /* Light blue */
+  color: #007bff; /* Dark blue */
+}
+
+/* Color scheme for Right Leaning */
+.bias-label.bias-right {
+  background-color: #fdeaea; /* Light red */
+  color: #dc3545; /* Dark red */
+}
+
+/* Color scheme for Center */
+.bias-label.bias-center {
+  background-color: #f0eaf7; /* Light purple */
+  color: #6f42c1; /* Dark purple */
+}
+
+/* Color scheme for Neutral */
+.bias-label.bias-neutral {
+  background-color: #f8f9fa; /* Light gray */
+  color: #6c757d; /* Dark gray */
 }
 
 @media (max-width: 768px) {
@@ -143,4 +134,3 @@
     font-size: 13px;
   }
 }
-

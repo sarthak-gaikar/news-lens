@@ -63,31 +63,13 @@ const ArticleCard = ({ article }) => {
         
         <div className="article-footer">
           <span className="article-category">{article.category}</span>
+          
           {article.bias && (
-            <div className={`bias-indicator bias-${article.bias.label}`}>
-              <span className="bias-dot"></span>
+            <span className={`bias-label bias-${article.bias.label}`}>
               {getBiasLabel(article.bias.label)}
-            </div>
+            </span>
           )}
         </div>
-        
-        {/* {article.bias && (
-          <div className="bias-bar-container">
-            <div className="bias-bar">
-              <div 
-                className={`bias-marker bias-${article.bias.label}`}
-                style={{
-                  left: `${((article.bias.score + 1) / 2) * 100}%`
-                }}
-              ></div>
-            </div>
-            <div className="bias-labels">
-              <span>Left</span>
-              <span>Center</span>
-              <span>Right</span>
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   );
