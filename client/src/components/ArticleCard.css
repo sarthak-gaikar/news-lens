@@ -7,6 +7,8 @@
   cursor: pointer;
   border: 1px solid var(--border-color);
   box-sizing: border-box; /* Ensures padding doesn't cause overflow */
+  display: flex; /* Added to help content grow */
+  flex-direction: column; /* Added to stack content */
 }
 
 .article-card:hover {
@@ -33,6 +35,9 @@
 
 .article-content {
   padding: 20px;
+  display: flex; /* Added */
+  flex-direction: column; /* Added */
+  flex-grow: 1; /* Added to make content fill the card */
 }
 
 .article-meta {
@@ -71,13 +76,15 @@
   line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex-grow: 1; /* Added to push footer down */
+  margin-bottom: 1rem; /* Added spacing */
 }
 
 .article-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 15px; /* This will now be above the bias box */
 }
 
 .article-category {
@@ -89,37 +96,82 @@
   text-transform: capitalize;
 }
 
-/* --- Styles for the colored bias label --- */
+/* --- REMOVED old .bias-label and .article-bias-keywords styles --- */
+
+
+/* --- ADDED NEW BIAS INFO STYLING --- */
+
+.article-bias-info {
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 15px; /* Space above this block */
+  border: 1px solid var(--border-color, #ddd);
+  background-color: #fcfcfc;
+  cursor: default; /* Make it obvious this part isn't clickable */
+}
+
+.bias-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
 .bias-label {
-  font-size: 12px;
-  font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
-/* Color scheme for Left Leaning */
-.bias-label.bias-left {
-  background-color: #e7f3ff; /* Light blue */
-  color: #007bff; /* Dark blue */
+.bias-confidence {
+  font-size: 0.8rem;
+  color: var(--gray-color, #555);
 }
 
-/* Color scheme for Right Leaning */
-.bias-label.bias-right {
-  background-color: #fdeaea; /* Light red */
-  color: #dc3545; /* Dark red */
+.bias-explanation {
+  font-size: 0.85rem;
+  color: var(--gray-color, #444);
+  line-height: 1.5;
 }
 
-/* Color scheme for Center */
-.bias-label.bias-center {
-  background-color: #f0eaf7; /* Light purple */
-  color: #6f42c1; /* Dark purple */
+.bias-keywords-container {
+  margin-top: 5px;
 }
 
-/* Color scheme for Neutral */
-.bias-label.bias-neutral {
-  background-color: #f8f9fa; /* Light gray */
-  color: #6c757d; /* Dark gray */
+.bias-keyword-tag {
+  display: inline-block;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: 2px 3px;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #333;
 }
+
+/* Color coding for the bias block borders */
+.bias-left {
+  border-left: 4px solid #007bff; /* Blue */
+}
+.bias-right {
+  border-left: 4px solid #dc3545; /* Red */
+}
+.bias-center {
+  border-left: 4px solid #6f42c1; /* Purple */
+}
+.bias-neutral {
+  border-left: 4px solid #6c757d; /* Gray */
+}
+
+/* Color coding for the labels */
+.bias-left .bias-label { color: #007bff; }
+.bias-right .bias-label { color: #dc3545; }
+.bias-center .bias-label { color: #6f42c1; }
+.bias-neutral .bias-label { color: #6c757d; }
+
+
+/* --- End of new styles --- */
+
 
 @media (max-width: 768px) {
   .article-content {

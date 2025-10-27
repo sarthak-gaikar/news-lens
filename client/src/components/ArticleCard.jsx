@@ -6,7 +6,12 @@ import './ArticleCard.css';
 const ArticleCard = ({ article }) => {
   const { user } = useAuth();
 
-  const handleArticleClick = async () => {
+  const handleArticleClick = async (e) => {
+    // Stop click if it's on a link inside the card
+    if (e.target.tagName === 'A') {
+      return;
+    }
+
     if (user && article._id) {
       try {
         await newsService.trackInteraction(article._id, 'read');
@@ -41,6 +46,51 @@ const ArticleCard = ({ article }) => {
     }
   };
 
+  // --- NEW: Helper function to generate the bias message ---
+  const renderBiasInfo = (bias) => {
+    if (!bias || !bias.label) return null;
+
+    const label = getBiasLabel(bias.label);
+    const confidence = Math.round(bias.confidence * 100);
+    const keywords = bias.keywords || [];
+
+    // Stop clicks on this area from opening the article
+    const stopPropagation = (e) => {
+      e.stopPropagation();
+    };
+
+    return (
+      <div 
+        className={`article-bias-info bias-${bias.label}`}
+        onClick={stopPropagation} // Prevent card click
+      >
+        <div className="bias-header">
+          <span className="bias-label">{label}</span>
+          <span className="bias-confidence">{confidence}% Confidence</span>
+        </div>
+        
+        {keywords.length > 0 && (
+          <div className="bias-explanation">
+            Based on terms like:
+            <div className="bias-keywords-container">
+              {keywords.map((keyword, index) => (
+                <span key={index} className="bias-keyword-tag">
+                  {keyword}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {keywords.length === 0 && (
+          <div className="bias-explanation">
+            This article was rated {label} with {confidence}% confidence.
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="article-card" onClick={handleArticleClick}>
       {article.imageUrl && (
@@ -63,13 +113,12 @@ const ArticleCard = ({ article }) => {
         
         <div className="article-footer">
           <span className="article-category">{article.category}</span>
-          
-          {article.bias && (
-            <span className={`bias-label bias-${article.bias.label}`}>
-              {getBiasLabel(article.bias.label)}
-            </span>
-          )}
+          {/* We will render bias info below this */}
         </div>
+
+        {/* --- THIS REPLACES THE OLD FOOTER AND KEYWORD DIVS --- */}
+        {renderBiasInfo(article.bias)}
+
       </div>
     </div>
   );

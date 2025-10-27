@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Link is still used
 import { useAuth } from '../context/AuthContext';
 import { newsService } from '../services/news';
 import ArticleCard from '../components/ArticleCard';
@@ -19,13 +19,13 @@ const Home = () => {
     try {
       setLoading(true);
       
-      // Get featured articles
-      const newsResponse = await newsService.getNewsFeed({ limit: 6 });
+      // FIX 1: Call the new public route and get 10 articles
+      const newsResponse = await newsService.getPublicNewsFeed({ limit: 3 });
       setFeaturedArticles(newsResponse.data || []);
       
-      // Get bias stats
+      // FIX 2: Get bias stats
       const stats = await newsService.getBiasStats();
-      setBiasStats(stats);
+      setBiasStats(stats || []); // Ensure stats is an array
       
     } catch (error) {
       console.error('Error loading home data:', error);
@@ -35,7 +35,16 @@ const Home = () => {
   };
 
   const getTotalArticles = () => {
+    // This will now sum the counts from the stats array
     return biasStats.reduce((total, stat) => total + stat.count, 0);
+  };
+
+  // FIX 4: Add a scroll handler
+  const handleScrollToFeatures = (e) => {
+    e.preventDefault();
+    document.getElementById('how-it-works').scrollIntoView({
+      behavior: 'smooth'
+    });
   };
 
   return (
@@ -57,9 +66,14 @@ const Home = () => {
                   <Link to="/news" className="btn btn-primary">
                     Explore News
                   </Link>
-                  <Link to="/news" className="btn btn-outline">
+                  {/* FIX 4: Change <Link> to <a> and add onClick */}
+                  <a 
+                    href="#how-it-works" 
+                    className="btn btn-outline"
+                    onClick={handleScrollToFeatures}
+                  >
                     How It Works
-                  </Link>
+                  </a>
                 </>
               ) : (
                 <Link to="/news" className="btn btn-primary">
@@ -71,11 +85,12 @@ const Home = () => {
           
           <div className="hero-stats">
             <div className="stat-card">
-              <div className="stat-number">{getTotalArticles()}+</div>
+              {/* This will now update dynamically */}
+              <div className="stat-number">{getTotalArticles() > 0 ? `${getTotalArticles()}+` : '...'}</div>
               <div className="stat-label">Articles Analyzed</div>
             </div>
             <div className="stat-card">
-              <div className="stat-number">{biasStats.length}</div>
+              <div className="stat-number">{biasStats.length || '...'}</div>
               <div className="stat-label">Bias Categories</div>
             </div>
             <div className="stat-card">
@@ -92,7 +107,8 @@ const Home = () => {
             <div className="briefing-stats">
               <span>{featuredArticles.length} stories</span>
               <span>•</span>
-              <span>{getTotalArticles()} articles</span>
+              {/* This will also update dynamically */}
+              <span>{getTotalArticles() > 0 ? `${getTotalArticles()} articles` : '...'}</span>
             </div>
           </div>
 
@@ -108,7 +124,8 @@ const Home = () => {
         </section>
 
         {/* Features Section */}
-        <section className="features-section">
+        {/* FIX 4: Add id="how-it-works" here */}
+        <section className="features-section" id="how-it-works">
           <h2>Why Choose NewsLens?</h2>
           <div className="features-grid">
             <div className="feature-card">
@@ -129,7 +146,8 @@ const Home = () => {
             <div className="feature-card">
               <div className="feature-icon">🕒</div>
               <h3>Real-time Updates</h3>
-              <p>Fresh news every 10 minutes from trusted sources</p>
+              {/* FIX 3: Change 10 minutes to 3 minutes */}
+              <p>Fresh news every 3 minutes from trusted sources</p>
             </div>
           </div>
         </section>

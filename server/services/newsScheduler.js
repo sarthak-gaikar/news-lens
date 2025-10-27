@@ -7,85 +7,73 @@ class NewsScheduler {
     this.intervalId = null;
   }
 
+  /**
+   * Starts the automatic news fetching schedule.
+   */
   start() {
     if (this.isRunning) {
-      console.log('🔄 News scheduler is already running');
+      console.log('🔄 News scheduler is already running.');
       return;
     }
 
     console.log('🚀 Starting news scheduler...');
     this.isRunning = true;
 
-    // Initial fetch
+    // Perform an initial fetch immediately on start.
     this.fetchAllCategories();
 
-    // Schedule periodic fetching every 10 minutes
+    // Schedule periodic fetching every 3 minutes.
     this.intervalId = setInterval(() => {
       this.fetchAllCategories();
-    }, 10 * 60 * 1000); // 10 minutes in milliseconds
+    }, 3 * 60 * 1000); // 3 minutes in milliseconds
 
-    console.log('✅ News scheduler started - fetching every 10 minutes');
+    console.log('✅ News scheduler started - fetching every 3 minutes.');
   }
 
+  /**
+   * Stops the automatic news fetching schedule.
+   */
   stop() {
     if (this.intervalId) {
       clearInterval(this.intervalId);
       this.intervalId = null;
     }
     this.isRunning = false;
-    console.log('🛑 News scheduler stopped');
+    console.log('🛑 News scheduler stopped.');
   }
 
+  /**
+   * Fetches news for all predefined categories.
+   */
   async fetchAllCategories() {
+    console.log('📡 Scheduled news fetch triggered...');
+    
+    const categories = [
+      'technology', 'politics', 'business', 
+      'entertainment', 'sports', 'health', 'science'
+    ];
+
     try {
-      console.log('📡 Scheduled news fetch started...');
+      // This single call fetches and processes articles for all categories in parallel.
+      const newArticles = await newsService.fetchNewsFromAPI(categories, 70); // Fetch ~10 per category
       
-      const categories = [
-        'technology', 'politics', 'business', 
-        'entertainment', 'sports', 'health', 'science'
-      ];
-
-      let totalFetched = 0;
-
-      // Fetch news for each category
-      for (const category of categories) {
-        try {
-          console.log(`📰 Fetching ${category} news...`);
-          const articles = await newsService.fetchNewsFromAPI([category], 10);
-          totalFetched += articles.length;
-          console.log(`✅ Fetched ${articles.length} ${category} articles`);
-          
-          // Small delay between categories to avoid rate limiting
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        } catch (error) {
-          console.error(`❌ Error fetching ${category} news:`, error.message);
-        }
-      }
-
-      // Get total articles count
       const totalArticles = await Article.countDocuments();
       
-      console.log(`🎉 Scheduled fetch completed!`);
+      console.log(`🎉 Scheduled fetch completed! Added ${newArticles.length} new articles.`);
       console.log(`📊 Total articles in database: ${totalArticles}`);
-      console.log(`⏰ Next fetch in 10 minutes...`);
-
-      return totalFetched;
+      console.log(`⏰ Next fetch in 3 minutes...`);
     } catch (error) {
       console.error('❌ Scheduled news fetch failed:', error.message);
     }
   }
 
-  // Manual trigger for testing
+  /**
+   * Manually triggers a news fetch cycle.
+   * @returns {Promise} A promise that resolves when the fetch is complete.
+   */
   async manualFetch() {
-    console.log('🔧 Manual news fetch triggered');
+    console.log('🔧 Manual news fetch triggered by an API call.');
     return await this.fetchAllCategories();
-  }
-
-  getStatus() {
-    return {
-      isRunning: this.isRunning,
-      nextFetch: this.intervalId ? 'Every 10 minutes' : 'Not scheduled'
-    };
   }
 }
 

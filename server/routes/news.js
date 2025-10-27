@@ -4,9 +4,11 @@ const newsController = require('../controllers/newsController');
 const auth = require('../middleware/auth');
 
 // Public routes
+router.get('/public-feed', newsController.getPublicNewsFeed);
+router.get('/public-preview', newsController.getPublicPreviewFeed); // <-- ADD THIS
+router.get('/bias-stats', newsController.getBiasStats);
 router.get('/categories', newsController.getCategories);
 router.get('/sources', newsController.getSources);
-router.get('/bias-stats', newsController.getBiasStats); // This line must be here
 
 // Protected routes
 router.get('/feed', auth, newsController.getNewsFeed);

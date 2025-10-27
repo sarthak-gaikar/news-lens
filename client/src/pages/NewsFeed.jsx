@@ -1,10 +1,41 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext'; // --- FIX 1: Import useAuth ---
 import { newsService } from '../services/news';
 import ArticleCard from '../components/ArticleCard';
 import NewsFilters from '../components/NewsFilters';
 import './NewsFeed.css';
 
+// --- A small component to show logged-out users ---
+const SignupPrompt = () => {
+  // --- FIX 2: Get the modal functions from the auth context ---
+  const { setShowLoginModal, setShowRegisterModal } = useAuth();
+
+  return (
+    <div className="signup-prompt">
+      <h2>See the Full Picture</h2>
+      <p>This is a public preview of the latest news. For personalized articles, bias tracking, and your full feed, please sign in or create an account.</p>
+      <div className="prompt-actions">
+        {/* --- FIX 3: Changed from <Link> to <button> and added onClick --- */}
+        <button 
+          className="btn btn-primary"
+          onClick={() => setShowLoginModal(true)}
+        >
+          Login
+        </button>
+        <button 
+          className="btn btn-outline"
+          onClick={() => setShowRegisterModal(true)}
+        >
+          Sign Up
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const NewsFeed = () => {
+  const { user } = useAuth(); // Get user state
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -25,7 +56,7 @@ const NewsFeed = () => {
 
   useEffect(() => {
     loadArticles();
-  }, [filters]);
+  }, [filters, user]); 
 
   const loadInitialData = async () => {
     try {
@@ -44,11 +75,25 @@ const NewsFeed = () => {
     try {
       setLoading(true);
       setError('');
-      const response = await newsService.getNewsFeed(filters);
-      setArticles(response.data);
-      setPagination(response.pagination || {});
+      
+      if (user) {
+        // --- LOGGED-IN USER ---
+        const response = await newsService.getNewsFeed(filters);
+        setArticles(response.data);
+        setPagination(response.pagination || {});
+      } else {
+        // --- LOGGED-OUT USER ---
+        const response = await newsService.getPublicPreviewFeed();
+        setArticles(response.data);
+        setPagination({}); 
+      }
+
     } catch (error) {
-      setError('Failed to load articles. Please try again.');
+      if (user) {
+        setError('Failed to load your feed. Please try again.');
+      } else {
+        setError('Failed to load the public preview. Please try again.');
+      }
       console.error('Error loading articles:', error);
     } finally {
       setLoading(false);
@@ -59,18 +104,24 @@ const NewsFeed = () => {
     setFilters(prev => ({
       ...prev,
       ...newFilters,
-      page: 1 // Reset to first page when filters change
+      page: 1 
     }));
   };
 
   const handleRefresh = async () => {
+    if (!user) return; 
+
     try {
       setLoading(true);
-      await newsService.refreshNews();
-      await loadArticles(); // Reload articles after refresh
+      setError('');
+      const response = await newsService.refreshNews();
+      setArticles(response.data);
+      setPagination(response.pagination || {});
     } catch (error) {
       setError('Failed to refresh news.');
       console.error('Error refreshing news:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,25 +138,42 @@ const NewsFeed = () => {
       <div className="container">
         <div className="news-header">
           <div className="news-title-section">
-            <h1>Top News Stories</h1>
-            <p>Stay informed with balanced perspectives</p>
+            {user ? (
+              <>
+                <h1>Your News Feed</h1>
+                <p>Personalized articles based on your preferences</p>
+              </>
+            ) : (
+              <>
+                <h1>Today's News Preview</h1>
+                <p>The top 3 stories from every category</p>
+              </>
+            )}
           </div>
-          <button 
-            className="btn btn-outline refresh-btn"
-            onClick={handleRefresh}
-            disabled={loading}
-          >
-            {loading ? 'Refreshing...' : 'Refresh News'}
-          </button>
+          
+          {user && (
+            <button 
+              className="btn btn-outline refresh-btn"
+              onClick={handleRefresh}
+              disabled={loading}
+            >
+              {loading ? 'Refreshing...' : 'Refresh News'}
+            </button>
+          )}
         </div>
 
-        <NewsFilters
-          filters={filters}
-          categories={categories}
-          sources={sources}
-          onFilterChange={handleFilterChange}
-          loading={loading}
-        />
+        {!user && <SignupPrompt />}
+
+        {user && (
+          <NewsFilters
+            filters={filters}
+            categories={categories}
+            sources={sources}
+            onFilterChange={handleFilterChange}
+            loading={loading}
+          />
+        )}
+
 
         {error && (
           <div className="error-message">
@@ -132,14 +200,20 @@ const NewsFeed = () => {
             {articles.length === 0 && !loading && (
               <div className="no-articles">
                 <h3>No articles found</h3>
-                <p>Try adjusting your filters or refresh the news.</p>
-                <button onClick={handleRefresh} className="btn btn-primary">
-                  Refresh News
-                </button>
+                {user ? (
+                  <>
+                    <p>Try adjusting your filters or refresh the news.</p>
+                    <button onClick={handleRefresh} className="btn btn-primary">
+                      Refresh News
+                    </button>
+                  </>
+                ) : (
+                  <p>We couldn't find any articles for our public preview. Please check back later.</p>
+                )}
               </div>
             )}
 
-            {pagination.totalPages > 1 && (
+            {user && pagination.totalPages > 1 && (
               <div className="pagination">
                 <button
                   className="pagination-btn"

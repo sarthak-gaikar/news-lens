@@ -1,6 +1,28 @@
 import api from './api';
 
 export const newsService = {
+  async getPublicNewsFeed(filters = {}) {
+    const params = new URLSearchParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key]) {
+        params.append(key, filters[key]);
+      }
+    });
+    
+    const response = await api.get(`/news/public-feed?${params}`);
+    return response.data;
+  },
+
+  /**
+   * --- NEW FUNCTION ---
+   * Gets the public preview feed (3 articles per category)
+   */
+  async getPublicPreviewFeed() {
+    // No filters needed, it's a fixed preview
+    const response = await api.get('/news/public-preview');
+    return response.data;
+  },
+  
   async getNewsFeed(filters = {}) {
     const params = new URLSearchParams();
     Object.keys(filters).forEach(key => {

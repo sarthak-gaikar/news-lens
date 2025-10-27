@@ -164,3 +164,36 @@
     gap: 15px;
   }
 }
+
+/* --- Add this to NewsFeed.css --- */
+
+.signup-prompt {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.signup-prompt h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.signup-prompt p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto 20px auto;
+}
+
+.prompt-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
