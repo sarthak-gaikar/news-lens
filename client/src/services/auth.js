@@ -19,5 +19,11 @@ export const authService = {
   async updatePreferences(preferences) {
     const response = await api.put('/users/preferences', preferences);
     return response.data;
+  },
+
+  // --- ADD THIS NEW FUNCTION ---
+  async getUserStats() {
+    const response = await api.get('/users/stats');
+    return response.data.data; // We want the data object
   }
 };

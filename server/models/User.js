@@ -43,7 +43,19 @@ const userSchema = new mongoose.Schema({
     articleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Article' },
     readAt: { type: Date, default: Date.now },
     interaction: { type: String, enum: ['read', 'liked', 'saved'], default: 'read' }
+  }],
+
+  // --- ADD THESE NEW FIELDS ---
+  likedArticles: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Article'
+  }],
+  savedArticles: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Article'
   }]
+  // --- END OF NEW FIELDS ---
+
 }, { 
   timestamps: true 
 });

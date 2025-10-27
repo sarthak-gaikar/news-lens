@@ -4,30 +4,29 @@ import { authService } from '../services/auth';
 import './Profile.css';
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, reFetchUser } = useAuth(); // --- ADDED reFetchUser ---
   const [preferences, setPreferences] = useState(user?.preferences || {});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [userStats, setUserStats] = useState(null);
 
   useEffect(() => {
-    if (user && user.preferences) {
-      setPreferences(user.preferences);
-      loadUserStats();
+    if (user) {
+      setPreferences(user.preferences || {});
+      loadUserStats(); // Load stats when user is available
     }
-  }, [user]);
+  }, [user]); // Re-run when user object changes
 
+  // --- UPDATED THIS FUNCTION ---
   const loadUserStats = async () => {
     try {
-      // This is mock data and would typically come from a user stats endpoint
-      const stats = {
-        totalRead: 42,
-        totalLiked: 15,
-        totalSaved: 8,
-      };
+      // 1. Call the new authService function
+      const stats = await authService.getUserStats();
+      // 2. Set state with real data
       setUserStats(stats);
     } catch (error) {
       console.error('Error loading user stats:', error);
+      setUserStats({ totalRead: 0, totalLiked: 0, totalSaved: 0 }); // Set default on error
     }
   };
 
@@ -38,25 +37,29 @@ const Profile = () => {
     }));
   };
 
-  // --- THIS FUNCTION IS NOW REMOVED ---
-  // const handleBiasFilterChange = (bias, enabled) => { ... };
-
   const savePreferences = async () => {
     try {
       setLoading(true);
       setMessage('');
+      
+      // 3. Call the auth service to update
       await authService.updatePreferences(preferences);
+      
+      // 4. Call reFetchUser to get all new user data
+      // This is better than reloading the whole page
+      await reFetchUser(); 
+      
       setMessage('Preferences updated successfully!');
 
-      // Refresh the page to load the new preferences
       setTimeout(() => {
-        window.location.reload();
-      }, 1000); // Wait 1 second to allow the user to read the message
+        setMessage('');
+      }, 2000); // Hide message after 2 seconds
 
     } catch (error) {
       setMessage('Error updating preferences. Please try again.');
       console.error('Error saving preferences:', error);
-      setLoading(false); // Stop loading if there's an error
+    } finally {
+      setLoading(false); // Stop loading on success or error
     }
   };
 
@@ -92,7 +95,13 @@ const Profile = () => {
         </div>
 
         <div className="profile-content">
-          {userStats && (
+          {/* --- UPDATED: Show loading state for stats --- */}
+          {!userStats ? (
+            <div className="stats-section">
+              <h2>Your News Activity</h2>
+              <p>Loading stats...</p>
+            </div>
+          ) : (
             <div className="stats-section">
               <h2>Your News Activity</h2>
               <div className="stats-grid">
@@ -136,9 +145,6 @@ const Profile = () => {
                 ))}
               </div>
             </div>
-
-            {/* --- THIS ENTIRE BLOCK IS NOW REMOVED --- */}
-            {/* <div className="preference-group"> ... </div> */}
 
             {message && (
               <div className={`message ${message.includes('Error') ? 'error' : 'success'}`}>

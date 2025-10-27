@@ -186,3 +186,25 @@
     font-size: 13px;
   }
 }
+
+/* Add this to ArticleCard.css */
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.card-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1.25rem;
+  line-height: 1;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.card-action-btn:hover {
+  background-color: #f0f0f0;
+}

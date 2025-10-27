@@ -8,6 +8,9 @@ const sanitizeUser = (user) => {
     username: user.username,
     email: user.email,
     preferences: user.preferences,
+    // --- ADD THESE TWO LINES ---
+    likedArticles: user.likedArticles,
+    savedArticles: user.savedArticles
   };
 };
 

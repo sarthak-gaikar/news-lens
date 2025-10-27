@@ -13,12 +13,7 @@ export const newsService = {
     return response.data;
   },
 
-  /**
-   * --- NEW FUNCTION ---
-   * Gets the public preview feed (3 articles per category)
-   */
   async getPublicPreviewFeed() {
-    // No filters needed, it's a fixed preview
     const response = await api.get('/news/public-preview');
     return response.data;
   },
@@ -61,7 +56,15 @@ export const newsService = {
   },
 
   async trackInteraction(articleId, interaction) {
+    // This is for 'read' events
     const response = await api.post('/users/interaction', { articleId, interaction });
+    return response.data;
+  },
+
+  // --- ADD THIS NEW FUNCTION ---
+  async toggleInteraction(articleId, interactionType) {
+    // This is for 'like' and 'save' events
+    const response = await api.post('/users/toggle-interaction', { articleId, interactionType });
     return response.data;
   }
 };
