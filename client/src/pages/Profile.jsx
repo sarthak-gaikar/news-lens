@@ -38,15 +38,8 @@ const Profile = () => {
     }));
   };
 
-  const handleBiasFilterChange = (bias, enabled) => {
-    setPreferences(prev => ({
-      ...prev,
-      biasFilter: {
-        ...(prev.biasFilter || {}),
-        [bias]: enabled
-      }
-    }));
-  };
+  // --- THIS FUNCTION IS NOW REMOVED ---
+  // const handleBiasFilterChange = (bias, enabled) => { ... };
 
   const savePreferences = async () => {
     try {
@@ -144,50 +137,8 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="preference-group">
-              <h3>Bias Preferences</h3>
-              <p className="preference-description">
-                Choose which political perspectives you want to see in your news feed:
-              </p>
-              <div className="bias-preferences">
-                <label className="bias-preference">
-                  <input
-                    type="checkbox"
-                    checked={preferences.biasFilter?.left ?? true}
-                    onChange={(e) => handleBiasFilterChange('left', e.target.checked)}
-                  />
-                  <span className="bias-indicator bias-left"></span>
-                  Left Leaning
-                </label>
-                <label className="bias-preference">
-                  <input
-                    type="checkbox"
-                    checked={preferences.biasFilter?.center ?? true}
-                    onChange={(e) => handleBiasFilterChange('center', e.target.checked)}
-                  />
-                  <span className="bias-indicator bias-center"></span>
-                  Center
-                </label>
-                <label className="bias-preference">
-                  <input
-                    type="checkbox"
-                    checked={preferences.biasFilter?.right ?? true}
-                    onChange={(e) => handleBiasFilterChange('right', e.target.checked)}
-                  />
-                  <span className="bias-indicator bias-right"></span>
-                  Right Leaning
-                </label>
-                <label className="bias-preference">
-                  <input
-                    type="checkbox"
-                    checked={preferences.biasFilter?.neutral ?? true}
-                    onChange={(e) => handleBiasFilterChange('neutral', e.target.checked)}
-                  />
-                  <span className="bias-indicator bias-neutral"></span>
-                  Neutral
-                </label>
-              </div>
-            </div>
+            {/* --- THIS ENTIRE BLOCK IS NOW REMOVED --- */}
+            {/* <div className="preference-group"> ... </div> */}
 
             {message && (
               <div className={`message ${message.includes('Error') ? 'error' : 'success'}`}>

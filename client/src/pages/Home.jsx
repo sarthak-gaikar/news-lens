@@ -147,7 +147,7 @@ const Home = () => {
               <div className="feature-icon">🕒</div>
               <h3>Real-time Updates</h3>
               {/* FIX 3: Change 10 minutes to 3 minutes */}
-              <p>Fresh news every 3 minutes from trusted sources</p>
+              <p>Fresh news every hour from trusted sources</p>
             </div>
           </div>
         </section>
