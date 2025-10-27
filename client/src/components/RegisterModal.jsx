@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import './AuthModal.css';
+import { useNavigate } from 'react-router-dom'; // --- FIX 1: Import useNavigate
 
 const RegisterModal = () => {
   const { showRegisterModal, setShowRegisterModal, register, setShowLoginModal } = useAuth();
@@ -12,6 +13,7 @@ const RegisterModal = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // --- FIX 2: Initialize the hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,9 +28,13 @@ const RegisterModal = () => {
 
     const result = await register(formData.username, formData.email, formData.password);
     
-    if (!result.success) {
+    // --- FIX 3: Add navigation on success ---
+    if (result.success) {
+      navigate('/'); // This will redirect to the homepage
+    } else {
       setError(result.message);
     }
+    // --- End of Fix ---
     
     setLoading(false);
   };

@@ -22,12 +22,12 @@ class NewsScheduler {
     // Perform an initial fetch immediately on start.
     this.fetchAllCategories();
 
-    // Schedule periodic fetching every 3 minutes.
+    // Schedule periodic fetching every hour.
     this.intervalId = setInterval(() => {
       this.fetchAllCategories();
-    }, 3 * 60 * 1000); // 3 minutes in milliseconds
+    }, 60 * 60 * 1000); // 1 hour in milliseconds
 
-    console.log('✅ News scheduler started - fetching every 3 minutes.');
+    console.log('✅ News scheduler started - fetching every hour.');
   }
 
   /**
@@ -61,7 +61,7 @@ class NewsScheduler {
       
       console.log(`🎉 Scheduled fetch completed! Added ${newArticles.length} new articles.`);
       console.log(`📊 Total articles in database: ${totalArticles}`);
-      console.log(`⏰ Next fetch in 3 minutes...`);
+      console.log(`⏰ Next fetch in an hour...`);
     } catch (error) {
       console.error('❌ Scheduled news fetch failed:', error.message);
     }
