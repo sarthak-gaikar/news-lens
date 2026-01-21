@@ -1,7 +1,7 @@
 const User = require('../models/User');
 
 const userController = {
-  // --- NEW FUNCTION TO HANDLE LIKES AND SAVES ---
+  // NEW FUNCTION TO HANDLE LIKES AND SAVES
   async toggleInteraction(req, res) {
     try {
       const { articleId, interactionType } = req.body; // 'like' or 'save'
@@ -56,7 +56,7 @@ const userController = {
     }
   },
 
-  // --- NEW FUNCTION FOR THE PROFILE PAGE STATS ---
+  // NEW FUNCTION FOR THE PROFILE PAGE STATS
   async getUserStats(req, res) {
     try {
       // req.user is already populated by our auth middleware
