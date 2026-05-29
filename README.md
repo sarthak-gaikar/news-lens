@@ -1,5 +1,16 @@
 # 📰 NewsLens
 
+<p align="center">
+  <img src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/Express.js-%23000000.svg?style=for-the-badge&logo=express&logoColor=white" alt="Express.js" />
+  <img src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/node.js-%236DA55F.svg?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens" alt="JWT" />
+  <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript" />
+</p>
+
+---
+
 **NewsLens** is a modern, full-stack MERN (MongoDB, Express, React, Node.js) web application designed to promote media literacy and transparency in news consumption. It aggregates articles across various categories, runs them through a custom lexicon-based Natural Language Processing (NLP) pipeline to evaluate political bias, and presents a customized reading experience. 
 
 By tracking user interactions and preferences, NewsLens constructs personalized feeds, maps media bias trends visually, and balances the news landscape for its users.
